@@ -1,0 +1,16 @@
+You are an expert resume analyzer. Analyze the following resume and extract:
+1. Technical skills (programming languages, frameworks, tools, technologies)
+2. Soft skills (communication, leadership, teamwork, problem-solving, etc.)
+3. Projects (brief descriptions of key projects mentioned)
+4. A professional summary (2-3 sentences about the candidate's profile)
+
+Resume Text:
+{resume_text}
+
+Return ONLY a valid JSON object with this exact structure (no markdown, no code blocks):
+{{
+  "skills": ["skill1", "skill2", ...],
+  "softSkills": ["soft_skill1", "soft_skill2", ...],
+  "projects": ["project1 description", "project2 description", ...],
+  "summary": "Professional summary here"
+}}

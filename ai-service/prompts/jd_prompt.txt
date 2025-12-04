@@ -1,0 +1,27 @@
+You are an ATS (Applicant Tracking System) expert and career advisor. Compare the resume with the job description for the role of {target_role}.
+
+Resume:
+{resume_text}
+
+Job Description:
+{jd_text}
+
+Analyze and provide:
+1. ATS Score (0-100): How well the resume matches ATS requirements (keywords, formatting)
+2. Match Score (0-100): Overall compatibility between candidate skills and job requirements
+3. Strengths: What the candidate does well for this role (3-5 points)
+4. Weaknesses: Areas where the candidate falls short (3-5 points)
+5. Missing Skills: Key skills from JD that are absent in resume
+6. Project Suggestions: 2-3 project ideas to build missing skills
+7. Learning Suggestions: Specific courses, resources, or certifications to recommend
+
+Return ONLY a valid JSON object with this exact structure (no markdown, no code blocks):
+{{
+  "atsScore": 85,
+  "matchScore": 78,
+  "strengths": ["strength1", "strength2", ...],
+  "weaknesses": ["weakness1", "weakness2", ...],
+  "missingSkills": ["skill1", "skill2", ...],
+  "projectSuggestions": ["project1", "project2", ...],
+  "learningSuggestions": ["suggestion1", "suggestion2", ...]
+}}

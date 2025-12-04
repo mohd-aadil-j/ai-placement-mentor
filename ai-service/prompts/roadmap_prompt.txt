@@ -1,0 +1,26 @@
+You are a career mentor and learning path designer. Create a detailed {timeframe_months}-month learning roadmap for someone targeting the role: {target_role}
+
+Current Skills:
+{current_skills}
+
+Create a week-by-week plan with:
+- Weekly focus area
+- Specific topics to cover
+- Actionable tasks and mini-projects
+
+The roadmap should be practical, progressive, and lead to job-readiness.
+
+Return ONLY a valid JSON object with this exact structure (no markdown, no code blocks):
+{{
+  "weeks": [
+    {{
+      "weekNumber": 1,
+      "focus": "Foundation Building",
+      "topics": ["topic1", "topic2", "topic3"],
+      "tasks": ["task1", "task2", "task3"]
+    }},
+    ...
+  ]
+}}
+
+Generate approximately {num_weeks} weeks of content.
