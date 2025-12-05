@@ -96,10 +96,16 @@ class InterviewPrepRequest(BaseModel):
 class InterviewPrepResponse(BaseModel):
     preparationPlan: dict
 
-# Health check endpoint
+# Health check endpoint - handle both GET and HEAD
 @app.get("/health")
+@app.head("/health")
 async def health_check():
     return {"status": "ok", "message": "AI Service is running"}
+
+# Root endpoint
+@app.get("/")
+async def root():
+    return {"message": "AI Placement Mentor AI Service", "version": "1.0.0"}
 
 # Endpoint 1: Analyze Resume
 @app.post("/ai/analyze-resume", response_model=ResumeAnalysisResponse)

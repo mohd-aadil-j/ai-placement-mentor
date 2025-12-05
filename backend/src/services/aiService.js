@@ -9,10 +9,19 @@ export const analyzeResume = async (resumeText) => {
   try {
     const response = await axios.post(`${AI_SERVICE_URL}/ai/analyze-resume`, {
       resume_text: resumeText,
+    }, {
+      timeout: 30000,
+      headers: {
+        'Content-Type': 'application/json',
+      }
     });
     return response.data;
   } catch (error) {
     console.error('AI Service Error (analyze-resume):', error.message);
+    if (error.response) {
+      console.error('AI Service Response Status:', error.response.status);
+      console.error('AI Service Response Data:', error.response.data);
+    }
     throw new Error('Failed to analyze resume with AI service');
   }
 };
