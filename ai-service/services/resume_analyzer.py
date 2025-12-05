@@ -7,13 +7,10 @@ except Exception:
     pass
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
+from langchain_core.messages import HumanMessage
 from types import SimpleNamespace
-import os
-import json
-try:
-    from openai import OpenAI  # type: ignore
-except Exception:
-    OpenAI = None  # type: ignore
+from openai import OpenAI  # type: ignore
+ # type: ignore
 
 # Initialize Gemini model
 def get_llm():
@@ -42,14 +39,19 @@ def get_llm():
 
         return OpenAILLMAdapter(api_key, model)
     else:
-        api_key = os.getenv("GOOGLE_API_KEY")
+        api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
         if not api_key:
-            raise ValueError("GOOGLE_API_KEY not found in environment variables")
-        return ChatGoogleGenerativeAI(
-            model="gemini-pro",
-            google_api_key=api_key,
-            temperature=0.3
-        )
+            raise ValueError("GOOGLE_API_KEY or GEMINI_API_KEY not found in environment variables")
+        try:
+            return ChatGoogleGenerativeAI(
+                model="gemini-pro",
+                google_api_key=api_key,
+                temperature=0.3,
+                convert_system_message_to_human=True
+            )
+        except Exception as e:
+            print(f"Error initializing ChatGoogleGenerativeAI: {e}")
+            raise
 
 # Load prompt template
 def load_prompt_template(filename):

@@ -2,6 +2,7 @@
 Classroom Assistants Service - Specialized training assistants
 """
 from langchain_core.prompts import PromptTemplate
+from langchain_core.messages import HumanMessage
 from langchain.globals import set_verbose
 import os
 
@@ -33,10 +34,14 @@ def get_llm():
         return OpenAIAdapter(client, model)
     else:
         from langchain_google_genai import ChatGoogleGenerativeAI
+        api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GOOGLE_API_KEY or GEMINI_API_KEY not found in environment variables")
         return ChatGoogleGenerativeAI(
             model="gemini-pro",
+            google_api_key=api_key,
             temperature=0.7,
-            google_api_key=os.getenv('GOOGLE_API_KEY')
+            convert_system_message_to_human=True
         )
 
 def chat_with_technical_assistant(message: str, conversation_history: list = None) -> dict:

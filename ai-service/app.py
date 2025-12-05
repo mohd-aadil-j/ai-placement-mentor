@@ -1,3 +1,7 @@
+import logging
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -110,6 +114,7 @@ async def root():
 # Endpoint 1: Analyze Resume
 @app.post("/ai/analyze-resume", response_model=ResumeAnalysisResponse)
 async def analyze_resume(request: ResumeAnalysisRequest):
+    logger.info(f"Received resume analysis request, text length: {len(request.resume_text)}")
     try:
         result = await analyze_resume_text(request.resume_text)
         return result
