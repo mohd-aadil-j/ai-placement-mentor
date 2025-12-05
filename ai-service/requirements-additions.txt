@@ -1,0 +1,25 @@
+# Additions for compatibility and missing imports
+# These are needed for Google Generative AI, LangChain, and general FastAPI usage
+# You can merge these into requirements.txt
+
+# Google Generative AI dependencies
+protobuf>=4.25.0
+cachetools>=5.3.0
+
+# LangChain dependencies
+numpy>=1.26.0
+scikit-learn>=1.3.0
+
+# General
+typing-extensions>=4.0.0
+
+# For logging and YAML config (optional, but often used)
+PyYAML>=6.0
+python-json-logger>=2.0.7
+
+# For Google API client (if you use Google APIs elsewhere)
+google-api-python-client>=2.100.0
+google-auth>=2.23.0
+
+# For async support (if needed)
+anyio>=3.7.0
