@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 try:
     from langchain.globals import set_verbose  # type: ignore
     set_verbose(False)
@@ -9,9 +10,14 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import PromptTemplate
 from langchain_core.messages import HumanMessage
 from types import SimpleNamespace
-import os
-import json
-from openai import OpenAI  # type: ignore
+try:
+    from openai import OpenAI  # type: ignore
+    import openai  # type: ignore
+except Exception:
+    OpenAI = None  # type: ignore
+    openai = None  # type: ignore
+
+logger = logging.getLogger(__name__)
 
 
 # Initialize Gemini model
@@ -25,19 +31,29 @@ def get_llm():
         if not api_key:
             raise ValueError("OPENAI_API_KEY not found in environment variables")
 
+        try:
+            version = getattr(openai, "__version__", "unknown") if openai else "unknown"
+            logger.info(f"Using OpenAI provider with sdk version={version}, model={model}")
+        except Exception:
+            pass
+
         class OpenAILLMAdapter:
             def __init__(self, api_key: str, model: str):
                 self.client = OpenAI(api_key=api_key)
                 self.model = model
 
             def invoke(self, prompt: str):
-                resp = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.4,
-                )
-                content = resp.choices[0].message.content if resp.choices else ""
-                return SimpleNamespace(content=content)
+                try:
+                    resp = self.client.chat.completions.create(
+                        model=self.model,
+                        messages=[{"role": "user", "content": prompt}],
+                        temperature=0.4,
+                    )
+                    content = resp.choices[0].message.content if resp.choices else ""
+                    return SimpleNamespace(content=content)
+                except Exception as err:
+                    logger.error(f"OpenAI invoke failed: {err}")
+                    raise
 
         return OpenAILLMAdapter(api_key, model)
     else:
