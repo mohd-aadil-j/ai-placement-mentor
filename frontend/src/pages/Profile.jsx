@@ -57,11 +57,19 @@ const Profile = () => {
   };
 
   const syncLeetCode = async () => {
-    if (!form.leetcodeUsername) return setError('Set a LeetCode username first');
+    if (!form.leetcodeUsername) return setError('Enter a LeetCode username first');
     setLoading(true); setError(''); setMessage('');
     try {
+      // Save username first
+      await profileApi.updateProfile({
+        name: form.name,
+        targetRole: form.targetRole,
+        leetcodeUsername: form.leetcodeUsername,
+        githubUsername: form.githubUsername || '',
+      });
+      // Then sync
       const res = await profileApi.syncLeetCode();
-      setMessage('LeetCode stats synced and saved');
+      setMessage('LeetCode stats synced successfully!');
       setForm((prev) => ({ ...prev, leetcodeData: res.leetcodeData || {} }));
       if (res.user) updateUser(res.user);
     } catch (e) {
@@ -70,11 +78,19 @@ const Profile = () => {
   };
 
   const syncGitHub = async () => {
-    if (!form.githubUsername) return setError('Set a GitHub username first');
+    if (!form.githubUsername) return setError('Enter a GitHub username first');
     setLoading(true); setError(''); setMessage('');
     try {
+      // Save username first
+      await profileApi.updateProfile({
+        name: form.name,
+        targetRole: form.targetRole,
+        leetcodeUsername: form.leetcodeUsername || '',
+        githubUsername: form.githubUsername,
+      });
+      // Then sync
       const res = await profileApi.syncGitHub();
-      setMessage('GitHub stats synced and saved');
+      setMessage('GitHub stats synced successfully!');
       setForm((prev) => ({ ...prev, githubData: res.githubData || {} }));
       if (res.user) updateUser(res.user);
     } catch (e) {
