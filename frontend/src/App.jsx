@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
-import Navbar from './components/Navbar';
-import GradientBackground from './components/GradientBackground';
+import Sidebar from './components/Sidebar';
+import ProfessionalBackground from './components/ProfessionalBackground';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -21,9 +21,10 @@ const App = () => {
     <AuthProvider>
       <Router>
         <div className="relative min-h-screen overflow-hidden">
-          <GradientBackground />
-          <div className="relative z-10">
-            <Navbar />
+          <ProfessionalBackground />
+          <div className="relative z-10 flex">
+            <Sidebar />
+            <main className="flex-1 pt-16 md:pt-0">
             <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
@@ -101,6 +102,7 @@ const App = () => {
             />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             </Routes>
+            </main>
           </div>
         </div>
       </Router>
