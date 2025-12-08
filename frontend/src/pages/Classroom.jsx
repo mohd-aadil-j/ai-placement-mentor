@@ -50,8 +50,8 @@ const Classroom = () => {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-800 mb-4">🎯 Training Classroom</h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+        <h1 className="text-4xl font-bold text-white mb-4">🎯 Training Classroom</h1>
+        <p className="text-lg text-gray-300 max-w-3xl mx-auto">
           Train with AI-powered expert trainers specialized in different placement rounds. 
           Get personalized guidance, practice problems, and instant feedback.
         </p>
