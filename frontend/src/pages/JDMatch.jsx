@@ -85,7 +85,7 @@ const JDMatch = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">Job Description Match</h1>
+      <h1 className="text-4xl font-bold text-white mb-8">Job Description Match</h1>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
