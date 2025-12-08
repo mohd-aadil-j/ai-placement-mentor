@@ -130,7 +130,7 @@ const InterviewPrep = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
-      <h1 className="text-4xl font-bold text-gray-800 mb-8">Interview Preparation Planner</h1>
+      <h1 className="text-4xl font-bold text-white-800 mb-8">Interview Preparation Planner</h1>
 
       {error && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
@@ -276,9 +276,9 @@ const InterviewPrep = () => {
       {submitting && <LoadingSpinner />}
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-gray-800">Your Scheduled Interviews</h2>
+        <h2 className="text-2xl font-bold text-white-800">Your Scheduled Interviews</h2>
         {interviews.length === 0 ? (
-          <p className="text-gray-600">No interviews scheduled yet.</p>
+          <p className="text-white-600">No interviews scheduled yet.</p>
         ) : (
           interviews.map((interview) => {
             const daysUntil = getDaysUntil(interview.interviewDate);
