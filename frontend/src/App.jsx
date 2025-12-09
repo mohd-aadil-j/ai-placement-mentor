@@ -1,9 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { useAuth } from './context/AuthContext';
 import Sidebar from './components/Sidebar';
 import ProfessionalBackground from './components/ProfessionalBackground';
 import ProtectedRoute from './components/ProtectedRoute';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
@@ -16,18 +18,27 @@ import Classroom from './pages/Classroom';
 import ClassroomAssistant from './pages/ClassroomAssistant';
 import Profile from './pages/Profile';
 
-const App = () => {
+const AppLayout = () => {
+  const { isAuthenticated } = useAuth();
+
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    );
+  }
+
   return (
-    <AuthProvider>
-      <Router>
-        <div className="relative min-h-screen overflow-hidden">
-          <ProfessionalBackground />
-          <div className="relative z-10 flex">
-            <Sidebar />
-            <main className="flex-1 pt-16 md:pt-0">
-            <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+    <div className="relative min-h-screen overflow-hidden">
+      <ProfessionalBackground />
+      <div className="relative z-10 flex">
+        <Sidebar />
+        <main className="flex-1 pt-16 md:pt-0">
+          <Routes>
             <Route
               path="/dashboard"
               element={
@@ -101,10 +112,18 @@ const App = () => {
               }
             />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            </Routes>
-            </main>
-          </div>
-        </div>
+          </Routes>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+const App = () => {
+  return (
+    <AuthProvider>
+      <Router>
+        <AppLayout />
       </Router>
     </AuthProvider>
   );

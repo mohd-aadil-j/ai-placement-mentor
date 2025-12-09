@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Placement Mentor - Your Career Advancement Partner</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.6;
+      color: #333;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 100px 20px;
+      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: 3.5rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.3rem;
+      margin-bottom: 30px;
+      max-width: 600px;
+      opacity: 0.95;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: white;
+      color: #667eea;
+      padding: 15px 40px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+      background: #f0f0f0;
+    }
+
+    /* Features Section */
+    .features {
+      padding: 80px 20px;
+      background: #f8f9fa;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      color: #333;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-bottom: 60px;
+    }
+
+    .feature-card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: #667eea;
+    }
+
+    .feature-card p {
+      color: #666;
+      line-height: 1.8;
+    }
+
+    /* How It Works Section */
+    .how-it-works {
+      padding: 80px 20px;
+      background: white;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .step {
+      text-align: center;
+    }
+
+    .step-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: #667eea;
+      color: white;
+      border-radius: 50%;
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .step h4 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .step p {
+      color: #666;
+    }
+
+    /* Benefits Section */
+    .benefits {
+      padding: 80px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .benefits .section-title {
+      color: white;
+    }
+
+    .benefits-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .benefit-item {
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+
+    .benefit-check {
+      font-size: 1.5rem;
+      color: #4ade80;
+      flex-shrink: 0;
+    }
+
+    .benefit-item p {
+      font-size: 1.1rem;
+    }
+
+    /* CTA Section */
+    .cta-section {
+      padding: 80px 20px;
+      background: white;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .cta-section p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+      color: #666;
+    }
+
+    .cta-button-large {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 18px 50px;
+      border-radius: 50px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    }
+
+    .cta-button-large:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+    }
+
+    /* Footer */
+    footer {
+      background: #333;
+      color: white;
+      text-align: center;
+      padding: 30px 20px;
+      margin-top: 40px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .feature-card h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>🎓 AI Placement Mentor</h1>
+    <p>Your AI-powered career advancement partner. Get personalized guidance, interview prep, resume analysis, and more!</p>
+    <a href="/register" class="cta-button">Get Started</a>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="container">
+      <h2 class="section-title">Powerful Features to Boost Your Career</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📄</div>
+          <h3>Resume Analysis</h3>
+          <p>Upload your resume and get AI-powered analysis of your skills, experience, and areas for improvement. Get actionable feedback to make your resume stand out.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🔍</div>
+          <h3>JD Matching</h3>
+          <p>Compare your resume with job descriptions. Get ATS scores, skill gap analysis, and personalized recommendations to tailor your application for specific roles.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🗺️</div>
+          <h3>Learning Roadmap</h3>
+          <p>Generate personalized learning paths based on your target role. Get a structured week-by-week plan with topics, tasks, and milestones to achieve your career goals.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💬</div>
+          <h3>AI Mentor Chat</h3>
+          <p>Chat with your AI mentor anytime. Get career advice, coding help, interview tips, and motivation to keep you on track throughout your journey.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🎤</div>
+          <h3>Interview Preparation</h3>
+          <p>Schedule interviews and get personalized preparation plans. Daily study guides, mock questions, company research, and confidence tips for success.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3>Classroom Assistant</h3>
+          <p>Get help with coding, aptitude, and technical subjects. Interactive problem-solving with detailed solutions and explanations to strengthen your foundation.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🏆</div>
+          <h3>Profile &amp; Achievements</h3>
+          <p>Track your progress with LeetCode and GitHub integration. Showcase your skills, contributions, and coding achievements in one unified profile.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Dashboard &amp; Analytics</h3>
+          <p>Visualize your journey with comprehensive statistics. Monitor your skill development, interview readiness, and overall career progression at a glance.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works Section -->
+  <section class="how-it-works">
+    <div class="container">
+      <h2 class="section-title">How It Works</h2>
+      <div class="steps-grid">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h4>Sign Up</h4>
+          <p>Create your account and set your target role to get started on your journey.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">2</div>
+          <h4>Analyze &amp; Plan</h4>
+          <p>Upload your resume and generate a personalized learning roadmap based on your goals.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">3</div>
+          <h4>Learn &amp; Practice</h4>
+          <p>Follow your roadmap, practice with coding challenges, and chat with your AI mentor for guidance.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-number">4</div>
+          <h4>Prepare &amp; Succeed</h4>
+          <p>Schedule interviews, get preparation plans, and land your dream job with confidence!</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section class="benefits">
+    <div class="container">
+      <h2 class="section-title">Why Choose AI Placement Mentor?</h2>
+      <div class="benefits-list">
+        <div class="benefit-item">
+          <span class="benefit-check">✓</span>
+          <p><strong>24/7 AI Support</strong> - Always available mentor ready to help anytime, anywhere</p>
+        </div>
+
+        <div class="benefit-item">
+          <span class="benefit-check">✓</span>
+          <p><strong>Personalized Guidance</strong> - Tailored plans based on your goals and current skills</p>
+        </div>
+
+        <div class="benefit-item">
+          <span class="benefit-check">✓</span>
+          <p><strong>Comprehensive Tools</strong> - Everything from resume analysis to interview prep in one platform</p>
+        </div>
+
+        <div class="benefit-item">
+          <span class="benefit-check">✓</span>
+          <p><strong>Real-time Feedback</strong> - Get instant feedback on your work and suggestions for improvement</p>
+        </div>
+
+        <div class="benefit-item">
+          <span class="benefit-check">✓</span>
+          <p><strong>Track Progress</strong> - Monitor your development with detailed analytics and insights</p>
+        </div>
+
+        <div class="benefit-item">
+          <span class="benefit-check">✓</span>
+          <p><strong>Interview Ready</strong> - Comprehensive interview preparation to boost your confidence</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Ready to Transform Your Career?</h2>
+      <p>Join thousands of students who are already using AI Placement Mentor to land their dream jobs.</p>
+      <a href="/register" class="cta-button-large">Get Started Today - It's Free!</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 AI Placement Mentor. All rights reserved. | Your partner in career success</p>
+  </footer>
+</body>
+</html>
