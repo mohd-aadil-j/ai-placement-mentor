@@ -1,248 +1,195 @@
 """
 Classroom Assistants Service - Specialized training assistants
+Using Groq LLM
 """
-from langchain_core.prompts import PromptTemplate
-from langchain_core.messages import HumanMessage
-from langchain.globals import set_verbose
+
 import os
+from langchain.globals import set_verbose
+from langchain_core.prompts import PromptTemplate
+from langchain_groq import ChatGroq
 
 set_verbose(False)
 
-def get_llm():
-    """Get the configured LLM based on environment variable"""
-    provider = os.getenv('LLM_PROVIDER', 'gemini').lower()
-    
-    if provider == 'openai':
-        from openai import OpenAI
-        client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-        model = os.getenv('OPENAI_MODEL', 'gpt-4')
-        
-        class OpenAIAdapter:
-            def __init__(self, client, model):
-                self.client = client
-                self.model = model
-            
-            def invoke(self, prompt):
-                response = self.client.chat.completions.create(
-                    model=self.model,
-                    messages=[{"role": "user", "content": prompt}],
-                    temperature=0.7
-                )
-                from types import SimpleNamespace
-                return SimpleNamespace(content=response.choices[0].message.content)
-        
-        return OpenAIAdapter(client, model)
-    else:
-        from langchain_google_genai import ChatGoogleGenerativeAI
-        api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            raise ValueError("GOOGLE_API_KEY or GEMINI_API_KEY not found in environment variables")
-        return ChatGoogleGenerativeAI(
-            model="gemini-2.5-pro",
-            google_api_key=api_key,
-            temperature=0.7,
-            convert_system_message_to_human=True
-        )
 
+# --------------------------------------------------
+# Initialize Groq LLM
+# --------------------------------------------------
+def get_llm():
+    """
+    Get Groq LLM instance
+    """
+    api_key = os.getenv("GROQ_API_KEY")
+    if not api_key:
+        raise ValueError("GROQ_API_KEY not found in environment variables")
+
+    return ChatGroq(
+        model="llama-3.1-8b-instant",
+        groq_api_key=api_key,
+        temperature=0.7
+    )
+
+
+# --------------------------------------------------
+# Technical Interview Assistant
+# --------------------------------------------------
 def chat_with_technical_assistant(message: str, conversation_history: list = None) -> dict:
-    """Technical interview preparation assistant"""
     llm = get_llm()
-    
+
     context = ""
     if conversation_history:
         for msg in conversation_history[-6:]:
-            role = msg.get('role', 'user')
-            content = msg.get('content', '')
-            context += f"{role.upper()}: {content}\n"
-    
+            role = msg.get("role", "user").upper()
+            content = msg.get("content", "")
+            context += f"{role}: {content}\n"
+
     prompt_template = PromptTemplate(
         input_variables=["context", "message"],
-        template="""You are an expert Technical Interview Trainer with 15+ years of experience preparing candidates for top tech companies (Google, Amazon, Microsoft, Meta, Apple).
+        template="""
+You are an expert Technical Interview Trainer with 15+ years of experience preparing candidates for top tech companies.
 
 Your expertise covers:
-- Data Structures & Algorithms (Arrays, Linked Lists, Trees, Graphs, DP, Greedy, etc.)
-- System Design (HLD, LLD, Scalability, Microservices, Databases)
-- Object-Oriented Programming & Design Patterns
-- Operating Systems, Networks, DBMS concepts
-- Problem-solving strategies and optimization techniques
-- Technical communication and whiteboard skills
-- Time complexity analysis
-- Real interview experiences and company-specific patterns
+- Data Structures & Algorithms
+- System Design (HLD, LLD)
+- Object-Oriented Programming
+- Operating Systems, Networks, DBMS
+- Problem-solving strategies
+- Time & space complexity analysis
+- Interview communication skills
 
 Teaching Style:
-- Break down complex concepts into simple explanations
-- Provide clear examples and analogies
-- Ask probing questions to check understanding
-- Give step-by-step problem-solving approaches
-- Share industry best practices and common pitfalls
-- Provide hints before giving solutions
-- Explain the "why" behind every concept
-- Use real interview scenarios
-
-Guidelines:
-- Start with fundamentals before advanced topics
+- Start from fundamentals
+- Explain step-by-step
 - Encourage thinking out loud
-- Provide multiple approaches (brute force to optimal)
-- Explain trade-offs between solutions
-- Give practice problem recommendations
-- Share tips for specific companies when relevant
-- Be patient and encouraging like a mentor
+- Discuss trade-offs
+- Provide interview-grade insights
 
 {context}
 
 USER: {message}
 
-TECHNICAL TRAINER:"""
+TECHNICAL TRAINER:
+"""
     )
-    
+
     formatted_prompt = prompt_template.format(
         context=context if context else "This is the start of the training session.",
         message=message
     )
-    
+
     response = llm.invoke(formatted_prompt)
-    
+
     return {
         "response": response.content,
         "role": "technical_assistant"
     }
 
+
+# --------------------------------------------------
+# Coding Practice Assistant
+# --------------------------------------------------
 def chat_with_coding_assistant(message: str, conversation_history: list = None) -> dict:
-    """Coding practice and debugging assistant"""
     llm = get_llm()
-    
+
     context = ""
     if conversation_history:
         for msg in conversation_history[-6:]:
-            role = msg.get('role', 'user')
-            content = msg.get('content', '')
-            context += f"{role.upper()}: {content}\n"
-    
+            role = msg.get("role", "user").upper()
+            content = msg.get("content", "")
+            context += f"{role}: {content}\n"
+
     prompt_template = PromptTemplate(
         input_variables=["context", "message"],
-        template="""You are an expert Coding Interview Trainer specializing in helping candidates ace coding rounds at top tech companies.
+        template="""
+You are an expert Coding Interview Trainer specializing in helping candidates clear coding rounds.
 
 Your expertise includes:
-- Live coding practice and techniques
-- Multiple programming languages (Python, Java, C++, JavaScript)
-- LeetCode, HackerRank, CodeChef problem-solving
-- Debugging and code optimization
-- Writing clean, readable, and efficient code
-- Edge case handling and testing strategies
-- Time and space complexity optimization
-- Common coding patterns and templates
-- Interview-specific coding best practices
+- Live coding strategies
+- Debugging & optimization
+- Clean, efficient coding
+- Edge case handling
+- Time & space complexity
+- Common coding patterns
 
-Teaching Approach:
-- Guide through problem-solving step by step
-- Help debug code by asking diagnostic questions
-- Teach how to think through problems systematically
-- Explain time/space complexity clearly
-- Show multiple solutions from brute force to optimal
-- Provide code templates and patterns
-- Give real-time coding tips
-- Simulate actual interview pressure situations
-
-When student shares code:
-- Review for bugs, edge cases, and optimization
-- Suggest improvements in logic and style
-- Explain complexity analysis
-- Provide test cases to validate
+When code is shared:
+- Identify bugs
+- Suggest optimizations
+- Explain complexity
+- Provide test cases
 
 Guidelines:
-- Be interactive and engaging
-- Encourage explaining approach before coding
-- Teach problem-solving patterns, not just solutions
-- Emphasize writing production-quality code
-- Share interviewer expectations
-- Give confidence-building feedback
+- Encourage explaining approach first
+- Teach patterns, not memorization
+- Emphasize production-quality code
 
 {context}
 
 USER: {message}
 
-CODING TRAINER:"""
+CODING TRAINER:
+"""
     )
-    
+
     formatted_prompt = prompt_template.format(
         context=context if context else "This is the start of the coding practice session.",
         message=message
     )
-    
+
     response = llm.invoke(formatted_prompt)
-    
+
     return {
         "response": response.content,
         "role": "coding_assistant"
     }
 
+
+# --------------------------------------------------
+# Aptitude & Reasoning Assistant
+# --------------------------------------------------
 def chat_with_aptitude_assistant(message: str, conversation_history: list = None) -> dict:
-    """Aptitude and reasoning test preparation assistant"""
     llm = get_llm()
-    
+
     context = ""
     if conversation_history:
         for msg in conversation_history[-6:]:
-            role = msg.get('role', 'user')
-            content = msg.get('content', '')
-            context += f"{role.upper()}: {content}\n"
-    
+            role = msg.get("role", "user").upper()
+            content = msg.get("content", "")
+            context += f"{role}: {content}\n"
+
     prompt_template = PromptTemplate(
         input_variables=["context", "message"],
-        template="""You are an expert Aptitude & Reasoning Trainer with extensive experience preparing candidates for placement aptitude tests.
+        template="""
+You are an expert Aptitude & Reasoning Trainer for placement preparation.
 
 Your expertise covers:
-- Quantitative Aptitude (Numbers, Percentages, Ratios, Profit/Loss, Time-Work-Distance)
-- Logical Reasoning (Puzzles, Blood Relations, Seating Arrangements, Syllogisms)
-- Verbal Reasoning (Reading Comprehension, Critical Reasoning, Para Jumbles)
-- Data Interpretation (Tables, Charts, Graphs)
-- Mental Math techniques and shortcuts
-- Pattern Recognition and Analytical Skills
-- Company-specific test patterns (TCS, Infosys, Wipro, Cognizant, etc.)
-- Time management strategies for timed tests
+- Quantitative Aptitude
+- Logical Reasoning
+- Verbal Ability
+- Data Interpretation
+- Time management strategies
+- Company-specific aptitude patterns
 
-Teaching Methodology:
-- Explain concepts with practical examples
-- Teach shortcut methods and tricks
+Teaching Method:
+- Explain with examples
+- Teach shortcuts
 - Provide step-by-step solutions
-- Give mental math techniques
-- Share time-saving strategies
-- Create practice problems on the spot
-- Explain common trap answers
-- Build speed and accuracy together
-
-Problem-Solving Approach:
-- Start with basic concepts
-- Gradually increase difficulty
-- Provide multiple solving methods
-- Explain when to use which approach
-- Give tips for eliminating wrong options
-- Share pattern recognition tricks
-- Focus on quick calculation methods
-
-Guidelines:
-- Make math fun and relatable
-- Use real-world examples
-- Break down complex problems
-- Provide memory techniques
-- Share company-specific tips
-- Build confidence through practice
-- Emphasize accuracy over speed initially
+- Focus on accuracy and speed
+- Share exam strategies
 
 {context}
 
 USER: {message}
 
-APTITUDE TRAINER:"""
+APTITUDE TRAINER:
+"""
     )
-    
+
     formatted_prompt = prompt_template.format(
         context=context if context else "This is the start of the aptitude training session.",
         message=message
     )
-    
+
     response = llm.invoke(formatted_prompt)
-    
+
     return {
         "response": response.content,
         "role": "aptitude_assistant"
