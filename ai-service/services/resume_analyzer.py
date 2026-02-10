@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+import time
 from langchain.globals import set_verbose
 from langchain_core.prompts import PromptTemplate
 from langchain_groq import ChatGroq
@@ -13,9 +14,6 @@ logger = logging.getLogger(__name__)
 # Initialize Groq LLM
 # --------------------------------------------------
 def get_llm():
-    """
-    Get Groq LLM instance
-    """
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
         raise ValueError("GROQ_API_KEY not found in environment variables")
@@ -25,8 +23,35 @@ def get_llm():
     return ChatGroq(
         model="llama-3.1-8b-instant",
         groq_api_key=api_key,
-        temperature=0.3
+        temperature=0.3,
+        timeout=30
     )
+
+
+# --------------------------------------------------
+# Retry-safe LLM invocation (handles 429)
+# --------------------------------------------------
+def invoke_with_retry(llm, prompt, retries=3):
+    for attempt in range(retries):
+        try:
+            return llm.invoke(prompt)
+        except Exception as e:
+            error_msg = str(e)
+
+            # Handle rate limit
+            if "429" in error_msg or "rate limit" in error_msg.lower():
+                wait_time = 2 ** attempt
+                logger.warning(
+                    f"Groq rate limit hit. Retrying in {wait_time}s (attempt {attempt + 1}/{retries})"
+                )
+                time.sleep(wait_time)
+                continue
+
+            # Other errors → fail fast
+            logger.error(f"Groq invoke failed: {e}")
+            raise
+
+    raise RuntimeError("Groq API failed after multiple retries")
 
 
 # --------------------------------------------------
@@ -39,13 +64,9 @@ def load_prompt_template(filename):
 
 
 # --------------------------------------------------
-# Parse JSON response from LLM
+# Parse JSON response
 # --------------------------------------------------
 def parse_json_response(response_text):
-    """
-    Extract and parse JSON from LLM response,
-    handling markdown code blocks safely
-    """
     text = response_text.strip()
 
     if text.startswith("```json"):
@@ -61,9 +82,8 @@ def parse_json_response(response_text):
     try:
         return json.loads(text)
     except json.JSONDecodeError as e:
-        raise ValueError(
-            f"Failed to parse JSON response: {e}\nResponse:\n{text}"
-        )
+        logger.error("Invalid JSON returned from LLM")
+        raise ValueError(f"JSON parse failed: {e}\n{text}")
 
 
 # --------------------------------------------------
@@ -84,11 +104,10 @@ async def analyze_resume_text(resume_text: str):
 
         formatted_prompt = prompt.format(resume_text=resume_text)
 
-        response = llm.invoke(formatted_prompt)
+        # 🔥 SAFE invocation (429 handled here)
+        response = invoke_with_retry(llm, formatted_prompt)
 
-        response_text = response.content
-
-        result = parse_json_response(response_text)
+        result = parse_json_response(response.content)
 
         return {
             "skills": result.get("skills", []),
